@@ -1,0 +1,1 @@
+web: gunicorn dropshipai.wsgi --log-file -

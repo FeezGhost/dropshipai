@@ -1,7 +1,7 @@
 import openai
 
 # use your own api key
-openai.api_key = "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"
+openai.api_key = "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"
 
 def generate_response(prompt):
     completions = openai.Completion.create(
