@@ -1,7 +1,7 @@
 import openai
 
 # use your own api key
-openai.api_key = "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"
+openai.api_key = "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"
 
 def generate_response(prompt):
     completions = openai.Completion.create(
@@ -16,32 +16,38 @@ def generate_response(prompt):
     message = completions.choices[0].text
     return message.strip()
 
+def GetSuggestion(generate_response):
 # get unique product in 5 words or less
-product = generate_response("Can you name one single unique product in no more than 5 words (limitations: no food, NO NAME BRAND PRODUCTS, something that can be shipped on the internet)")
+
+    product = generate_response("Can you name one single unique product in no more than 5 words (limitations: no food, NO NAME BRAND PRODUCTS, something that can be shipped on the internet)")
 
 # get store name
-store_name = generate_response(f"Recommend a store name for {product}")
+    store_name = generate_response(f"Recommend a store name for {product}")
 
 # get platform
-platform = generate_response(f"Recommend one platform to advertise {product}")
+    platform = generate_response(f"Recommend one platform to advertise {product}")
 
 # get username
-username = generate_response(f"Recommend a username for a social account that advertises {product}")
+    username = generate_response(f"Recommend a username for a social account that advertises {product}")
 
 # get bio
-bio = generate_response(f"Create a BIO for a social media account that sells {product}")
+    bio = generate_response(f"Create a BIO for a social media account that sells {product}")
 
 # get marketing campaign
-marketing_campaign = generate_response(f"What would be an effective 5-step marketing campaign for {product} on {platform}")
+    marketing_campaign = generate_response(f"What would be an effective 5-step marketing campaign for {product} on {platform}")
 
 # get web design
-web_design = generate_response(f"code an E-commerce website that sells {product} with the name {store_name} and has a simple, modern, sleek, consistent, and effective design for the user to purchase {product} and that includes: unique colorscheme, catalog page, add to cart, and mission statement. All in HTML")
+    web_design = generate_response(f"code an E-commerce website that sells {product} with the name {store_name} and has a simple, modern, sleek, consistent, and effective design for the user to purchase {product} and that includes: unique colorscheme, catalog page, add to cart, and mission statement. All in HTML")
 
 #GET ad idea
-ad_idea = generate_response(f"Create an idea for an video Advert for an E-commerce store that sells {product} and is named {store_name} and whose marketing plan is {marketing_campaign}")
+    ad_idea = generate_response(f"Create an idea for an video Advert for an E-commerce store that sells {product} and is named {store_name} and whose marketing plan is {marketing_campaign}")
 
 #scaling advice
-scaling = generate_response(f"Create a 5-step plan in order to help scale an E-commerce store that sells {product} and is named {store_name} and whose markeitng plan is {marketing_campaign} and is beign addvertized on {platform}")
+    scaling = generate_response(f"Create a 5-step plan in order to help scale an E-commerce store that sells {product} and is named {store_name} and whose markeitng plan is {marketing_campaign} and is beign addvertized on {platform}")
+    
+    return product,store_name,platform,username,bio,marketing_campaign,web_design,ad_idea,scaling
+
+product, store_name, platform, username, bio, marketing_campaign, web_design, ad_idea, scaling = GetSuggestion(generate_response)
 
 # display the outputs
 print("Product: ", product)

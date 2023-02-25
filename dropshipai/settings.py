@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
     'djoser',
     'paymentapp.apps.PaymentappConfig',
     'usersapp.apps.UsersappConfig',
@@ -144,6 +145,8 @@ REST_FRAMEWORK = {
 
 
 DJOSER = {
+    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS' : {
         'user_create' : 'usersapp.serializers.UserCreateSerializer',
         'current_user' : 'usersapp.serializers.UserSerializer'
@@ -160,7 +163,7 @@ SIMPLE_JWT = {
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'sterlingsmith2111@gmail.com'
-EMAIL_HOST_PASSWORD = 'Kenny2323 23'
+EMAIL_HOST_USER = 'megakartnotif@gmail.com'
+EMAIL_HOST_PASSWORD = 'gctnbrngmzapfrfn'
 EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
