@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-8_%t=-c&0_bh=0$^=oaon&s*o(r^(%u+dxy%29&trm3-tezaq0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['dropship-io.herokuapp.com','127.0.0.1','*']
 
 
 # Application definition
