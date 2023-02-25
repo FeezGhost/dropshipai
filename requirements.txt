@@ -41,4 +41,5 @@ tqdm==4.64.1
 tzdata==2022.7
 uritemplate==4.1.1
 urllib3==1.26.14
+whitenoise==6.3.0
 yarl==1.8.2
