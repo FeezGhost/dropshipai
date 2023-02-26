@@ -1,7 +1,9 @@
 import openai
 
+from .models import Product
+
 # use your own api key
-openai.api_key = "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"
+openai.api_key = "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"
 
 def generate_response(prompt):
     completions = openai.Completion.create(
@@ -16,7 +18,7 @@ def generate_response(prompt):
     message = completions.choices[0].text
     return message.strip()
 
-def GetSuggestion(generate_response):
+def GetSuggestion():
 # get unique product in 5 words or less
 
     product = generate_response("Can you name one single unique product in no more than 5 words (limitations: no food, NO NAME BRAND PRODUCTS, something that can be shipped on the internet)")
@@ -44,18 +46,28 @@ def GetSuggestion(generate_response):
 
 #scaling advice
     scaling = generate_response(f"Create a 5-step plan in order to help scale an E-commerce store that sells {product} and is named {store_name} and whose markeitng plan is {marketing_campaign} and is beign addvertized on {platform}")
-    
-    return product,store_name,platform,username,bio,marketing_campaign,web_design,ad_idea,scaling
+    productCreated = {
+        'product'            : product,
+        'store_name'         : store_name,
+        'platform'           : platform,
+        'username'           : username,
+        'bio'                : bio,
+        'marketing_campaign' : marketing_campaign,
+        'web_design'         : web_design,
+        'ad_idea'            : ad_idea,
+        'scaling'            : scaling
+    }
+    return productCreated
 
-product, store_name, platform, username, bio, marketing_campaign, web_design, ad_idea, scaling = GetSuggestion(generate_response)
+# product, store_name, platform, username, bio, marketing_campaign, web_design, ad_idea, scaling = GetSuggestion(generate_response)
 
-# display the outputs
-print("Product: ", product)
-print("Store Name: ", store_name)
-print("Platform: ", platform)
-print("Username: ", username)
-print("Bio: ", bio)
-print("Marketing Campaign: ", marketing_campaign)
-print("Website: ", web_design)
-print("First AD: ", ad_idea)
-print("scaling: ", scaling)
+# # display the outputs
+# print("Product: ", product)
+# print("Store Name: ", store_name)
+# print("Platform: ", platform)
+# print("Username: ", username)
+# print("Bio: ", bio)
+# print("Marketing Campaign: ", marketing_campaign)
+# print("Website: ", web_design)
+# print("First AD: ", ad_idea)
+# print("scaling: ", scaling)
