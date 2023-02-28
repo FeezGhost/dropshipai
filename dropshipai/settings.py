@@ -59,7 +59,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True    
+CORS_ORIGIN_ALLOW_ALL = True   
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+    '*'
+] 
 
 ROOT_URLCONF = 'dropshipai.urls'
 
@@ -156,7 +161,7 @@ REST_FRAMEWORK = {
 
 
 DJOSER = {
-    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'ACTIVATION_URL': 'localhost:300/?uuid={uid}&token={token}',
     'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS' : {
         'user_create' : 'usersapp.serializers.UserCreateSerializer',
