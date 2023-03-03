@@ -3,7 +3,7 @@ import openai
 from .models import Product
 
 # use your own api key
-openai.api_key = "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"
+openai.api_key = "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"
 
 def generate_response(prompt):
     completions = openai.Completion.create(
