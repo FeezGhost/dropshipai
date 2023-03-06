@@ -161,7 +161,7 @@ REST_FRAMEWORK = {
 
 
 DJOSER = {
-    'ACTIVATION_URL': 'localhost:300/?uuid={uid}&token={token}',
+    'ACTIVATION_URL': '/external/email-confirmation/?uuid={uid}&token={token}',
     'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS' : {
         'user_create' : 'usersapp.serializers.UserCreateSerializer',
