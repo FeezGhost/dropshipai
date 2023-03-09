@@ -4,6 +4,7 @@ from rest_framework.viewsets import ModelViewSet
 from django.contrib.auth.models import User
 from .serializers import UserCreateSerializer
 from  django.shortcuts import redirect
+from django.conf import settings
 
 class UserViewSet(ModelViewSet):
 
@@ -15,8 +16,7 @@ class UserViewSet(ModelViewSet):
     
 
 def email_Confirmation_optout(request):
-    print("Inside email confirmation")
     user_uuid = request.GET['uuid']
     user_token = request.GET['token']
-    url_to_land = "https://localhost:3000/email-confirmation?uuid="+user_uuid+"&token="+user_token
+    url_to_land = settings.EMAIL_CONFIRM_URL + "?uuid="+user_uuid+"&token="+user_token
     return redirect(url_to_land)

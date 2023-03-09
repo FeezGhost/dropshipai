@@ -14,7 +14,9 @@ from datetime import timedelta
 from pathlib import Path, os
 import environ
 
-env = environ.Env()
+env = environ.Env(
+    DEBUG=(bool, False)
+)
 environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,13 +30,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env('PROJECT_SECRETE_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ['dropship-io.herokuapp.com','127.0.0.1','*']
 
 
-# Rain Forest Key
+# Keys
 OPENAI_KEY = env('OPEN_AI_KEY')
+STRIPE_SEC_KEY = env('STRIPE_TEST_SECRETE_KEY') if DEBUG == True else env('STRIPE_PRODUCTION_SECRETE_KEY')
+STRIPE_WEBHOOK_SECRET = env('STRIPE_TEST_WEBHOOK_SECRET') if DEBUG == True else env('STRIPE_PRODUCTION_WEBHOOK_SECRET')
+
+# Client Urls
+CLIENT_BASE_URL = env('CLIENT_LOCAL_BASE_URL') if DEBUG == True else env('CLIENT_PRODUCTION_BASE_URL')
+CHECKOUT_FAILED_URL = CLIENT_BASE_URL+""+env('FRONTEND_CHECKOUT_FAILED_URL')
+CHECKOUT_SUCCESS_URL = CLIENT_BASE_URL+""+env('FRONTEND_CHECKOUT_SUCCESS_URL')
+EMAIL_CONFIRM_URL = CLIENT_BASE_URL+""+env('FRONTEND_EMAIL_CONFIRM_URL')
 
 # Application definition
 
