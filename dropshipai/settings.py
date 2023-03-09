@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from datetime import timedelta
 from pathlib import Path, os
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,13 +25,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-8_%t=-c&0_bh=0$^=oaon&s*o(r^(%u+dxy%29&trm3-tezaq0'
+SECRET_KEY = env('PROJECT_SECRETE_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['dropship-io.herokuapp.com','127.0.0.1','*']
 
+
+# Rain Forest Key
+OPENAI_KEY = env('OPEN_AI_KEY')
 
 # Application definition
 
@@ -161,7 +168,7 @@ REST_FRAMEWORK = {
 
 
 DJOSER = {
-    'ACTIVATION_URL': '/external/email-confirmation/?uuid={uid}&token={token}',
+    'ACTIVATION_URL': 'external/email-confirmation/?uuid={uid}&token={token}',
     'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS' : {
         'user_create' : 'usersapp.serializers.UserCreateSerializer',
@@ -178,8 +185,8 @@ SIMPLE_JWT = {
 
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'unitedmfers546@gmail.com'
-EMAIL_HOST_PASSWORD = 'ivosdaqxdsvdzkzc'
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

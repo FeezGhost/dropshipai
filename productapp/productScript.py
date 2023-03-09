@@ -1,9 +1,10 @@
 import openai
 
 from .models import Product
+from django.conf import settings
 
 # use your own api key
-openai.api_key = "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"
+openai.api_key = settings.OPENAI_KEY
 
 def generate_response(prompt):
     completions = openai.Completion.create(
