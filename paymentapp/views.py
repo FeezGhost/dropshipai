@@ -4,6 +4,14 @@ import stripe
 from django.http import JsonResponse
 from django.conf import settings
 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Subscription
+from django.utils import timezone
+
+from django.contrib.auth.models import User
+
 stripe.api_key = settings.STRIPE_SEC_KEY
 webhook_secret = settings.STRIPE_WEBHOOK_SECRET
 
@@ -18,20 +26,15 @@ class CreateCheckoutSession(APIView):
     product_name = dataDict['product_name'][0]
     try:
       checkout_session = stripe.checkout.Session.create(
-        line_items =[{
-        'price_data' :{
-          'currency' : 'usd',  
-            'product_data': {
-              'name': product_name,
-            },
-          'unit_amount': price
-        },
-        'quantity' : 1
-      }],
-        mode= 'payment',
+        client_reference_id=request.user.id,
+        line_items = [{
+            'price': price,
+            'quantity': 1,
+        }],
+        mode= 'subscription',
         success_url= FRONTEND_CHECKOUT_SUCCESS_URL,
         cancel_url= FRONTEND_CHECKOUT_FAILED_URL,
-        )
+      )
       return redirect(checkout_session.url , code=303)
     except Exception as e:
         print(e)
@@ -62,7 +65,52 @@ class WebHook(APIView):
       payment_method = event.data.object 
       print("--------payment_method ---------->" , payment_method)
     # ... handle other event types
+    # Handle the checkout.session.completed event
+    elif event['type'] == 'checkout.session.completed':
+        # import pdb ; pdb.set_trace()
+        session = event['data']['object']
+        print("session: ", session)
+        # Fetch all the required data from session
+        client_reference_id = session.get('client_reference_id')
+        stripe_customer_id = session.get('customer')
+        stripe_subscription_id = session.get('subscription')
+        
+        # Get the user and create a new StripeCustomer
+        user = User.objects.get(id=client_reference_id)
+
+        # Get Line Item To Get Product and Price Details
+        line_items = stripe.checkout.Session.list_line_items(session.id)
+        print("line items: ", line_items)
+        price_id = line_items.data[0]['price']['id']
+        price: stripe.Price = stripe.Price.retrieve(price_id)
+        
+        stripeCustomer = Subscription.objects.create(
+           user = user,
+           customer_key = stripe_customer_id,
+           price_key = price_id,
+           product_key = '',
+           subscription_id = stripe_subscription_id
+        ) 
+        print(user.username + ' just subscribed.')
+    
     else:
       print('Unhandled event type {}'.format(event.type))
 
     return JsonResponse(success=True, safe=False)
+
+
+
+@api_view(['GET'])
+def is_user_subscribed(request):
+    current_month = timezone.now().month
+    current_month_subs_count = Subscription.objects.filter(
+       user = request.user, 
+       date_created__month = current_month,
+       isSubscribed = True
+    ).count()
+
+    return Response(
+        data        = current_month_subs_count > 0, 
+        status      = status.HTTP_200_OK
+    )
+    
