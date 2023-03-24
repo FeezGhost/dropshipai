@@ -49,11 +49,14 @@ class WebHook(APIView):
       event = stripe.Webhook.construct_event(
         payload ,sig_header , webhook_secret
         )
+      print('event',event)
     except ValueError as err:
         # Invalid payload
+        print('value error',err)
         raise err
     except stripe.error.SignatureVerificationError as err:
         # Invalid signature
+        print('signature error', err)
         raise err
 
     # Handle the event
@@ -68,34 +71,42 @@ class WebHook(APIView):
     elif event['type'] == 'checkout.session.completed':
         # import pdb ; pdb.set_trace()
         session = event['data']['object']
-        print("session: ", session)
+        # print("session: ", session)
         # Fetch all the required data from session
         client_reference_id = session.get('client_reference_id')
+        print('client_reference_id', client_reference_id)
         stripe_customer_id = session.get('customer')
+        print('stripe_customer_id', stripe_customer_id)
         stripe_subscription_id = session.get('subscription')
+        print('stripe_subscription_id', stripe_subscription_id)
         
         # Get the user and create a new StripeCustomer
-        user = User.objects.get(id=client_reference_id)
+        try:
+          user = User.objects.get(id=client_reference_id)
+          print('user', user)
 
-        # Get Line Item To Get Product and Price Details
-        line_items = stripe.checkout.Session.list_line_items(session.id)
-        print("line items: ", line_items)
-        price_id = line_items.data[0]['price']['id']
-        price: stripe.Price = stripe.Price.retrieve(price_id)
-        
-        stripeCustomer = Subscription.objects.create(
-           user = user,
-           customer_key = stripe_customer_id,
-           price_key = price_id,
-           product_key = '',
-           subscription_id = stripe_subscription_id
-        ) 
-        print(user.username + ' just subscribed.')
+          # Get Line Item To Get Product and Price Details
+          line_items = stripe.checkout.Session.list_line_items(session.id)
+          print("line items: ", line_items)
+          price_id = line_items.data[0]['price']['id']
+          price: stripe.Price = stripe.Price.retrieve(price_id)
+          
+          stripeCustomer = Subscription.objects.create(
+            user = user,
+            customer_key = stripe_customer_id,
+            price_key = price_id,
+            product_key = '',
+            subscription_id = stripe_subscription_id
+          ) 
+          print(user.username + ' just subscribed.')
+        except User.DoesNotExist:
+          print('user not found just subscribed.')
+           
     
     else:
       print('Unhandled event type {}'.format(event.type))
 
-    return JsonResponse(success=True, safe=False)
+    return JsonResponse(data = "", success=True, safe=False)
 
 
 
