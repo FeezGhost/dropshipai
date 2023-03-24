@@ -49,7 +49,6 @@ class WebHook(APIView):
       event = stripe.Webhook.construct_event(
         payload ,sig_header , webhook_secret
         )
-      print('event',event)
     except ValueError as err:
         # Invalid payload
         print('value error',err)
