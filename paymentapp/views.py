@@ -23,6 +23,7 @@ class CreateCheckoutSession(APIView):
   def get(self, request):
     user_id = request.GET.get('userid')
     price = settings.STRIPE_PRICE_KEY
+    print('user_id', user_id)
     try:
       checkout_session = stripe.checkout.Session.create(
         client_reference_id=user_id,
@@ -34,6 +35,7 @@ class CreateCheckoutSession(APIView):
         success_url= FRONTEND_CHECKOUT_SUCCESS_URL,
         cancel_url= FRONTEND_CHECKOUT_FAILED_URL,
       )
+      print("checkout session created", checkout_session)
       return redirect(checkout_session.url , code=303)
     except Exception as e:
         print(e)
