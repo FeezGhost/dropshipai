@@ -16,6 +16,6 @@ urlpatterns = [
     path('product/ping/', productViews.ping, name="product_ping"),
     path('product/', productViews.getRandomProduct, name="product"),
     path('external/email-confirmation/',user_views.email_Confirmation_optout, name="email-confirmation-out"),
-    path('payment/checkout/create-checkout-session/' , paymentViews.CreateCheckoutSession.as_view()), 
+    path('payment/checkout/create-checkout-session/<str:pk_id>/' , paymentViews.CreateCheckoutSession.as_view()), 
     path('payment/webhook/' , paymentViews.WebHook.as_view()), 
 ]

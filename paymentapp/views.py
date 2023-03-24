@@ -20,8 +20,8 @@ FRONTEND_CHECKOUT_FAILED_URL = settings.CHECKOUT_FAILED_URL
 
 # Create your views here.
 class CreateCheckoutSession(APIView):
-  def get(self, request):
-    user_id = request.GET.get('userid')
+  def get(self, request, pk_id):
+    user_id = pk_id
     price = settings.STRIPE_PRICE_KEY
     print('user_id', user_id)
     try:
