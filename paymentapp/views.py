@@ -20,13 +20,12 @@ FRONTEND_CHECKOUT_FAILED_URL = settings.CHECKOUT_FAILED_URL
 
 # Create your views here.
 class CreateCheckoutSession(APIView):
-  def post(self, request):
-    dataDict = dict(request.data)
-    price = dataDict['price'][0]
-    product_name = dataDict['product_name'][0]
+  def get(self, request):
+    user_id = request.GET.get('userid')
+    price = settings.STRIPE_PRICE_KEY
     try:
       checkout_session = stripe.checkout.Session.create(
-        client_reference_id=request.user.id,
+        client_reference_id=user_id,
         line_items = [{
             'price': price,
             'quantity': 1,
