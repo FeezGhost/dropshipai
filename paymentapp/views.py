@@ -1,7 +1,7 @@
 from django.shortcuts import redirect
 from rest_framework.views import APIView
 import stripe
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 
 from rest_framework.decorators import api_view
@@ -106,7 +106,7 @@ class WebHook(APIView):
     else:
       print('Unhandled event type {}'.format(event.type))
 
-    return JsonResponse(data = "", success=True, safe=False)
+    return HttpResponse(status=200)
 
 
 
