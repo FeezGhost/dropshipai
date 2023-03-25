@@ -47,6 +47,7 @@ CLIENT_BASE_URL = env('CLIENT_LOCAL_BASE_URL') if DEBUG == True else env('CLIENT
 CHECKOUT_FAILED_URL = CLIENT_BASE_URL+""+env('FRONTEND_CHECKOUT_FAILED_URL')
 CHECKOUT_SUCCESS_URL = CLIENT_BASE_URL+""+env('FRONTEND_CHECKOUT_SUCCESS_URL')
 EMAIL_CONFIRM_URL = CLIENT_BASE_URL+""+env('FRONTEND_EMAIL_CONFIRM_URL')
+PASSWORD_RESET_URL = CLIENT_BASE_URL+""+env('PASSWORD_RESET_URL')
 
 # Application definition
 
@@ -181,6 +182,7 @@ REST_FRAMEWORK = {
 
 DJOSER = {
     'ACTIVATION_URL': 'external/email-confirmation/?uuid={uid}&token={token}',
+    'PASSWORD_RESET_CONFIRM_URL': 'external/password-reset/?uuid={uid}&token={token}',
     'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS' : {
         'user_create' : 'usersapp.serializers.UserCreateSerializer',

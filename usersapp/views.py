@@ -20,3 +20,10 @@ def email_Confirmation_optout(request):
     user_token = request.GET['token']
     url_to_land = settings.EMAIL_CONFIRM_URL + "?uuid="+user_uuid+"&token="+user_token
     return redirect(url_to_land)
+
+
+def password_reset_optout(request):
+    user_uuid = request.GET['uuid']
+    user_token = request.GET['token']
+    url_to_land = settings.PASSWORD_RESET_URL + "?uuid="+user_uuid+"&token="+user_token
+    return redirect(url_to_land)
