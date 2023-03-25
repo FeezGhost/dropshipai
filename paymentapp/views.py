@@ -27,16 +27,14 @@ FRONTEND_CHECKOUT_FAILED_URL = settings.CHECKOUT_FAILED_URL
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def is_user_subscribed(request):
-    userr = request.user
-    current_month = timezone.now().month
-    
     current_month_sub = Subscription.objects.filter(
        user = request.user, 
        isSubscribed = True
     ).last()
-    
+    print("subscription model on server: ", current_month_sub)    
     if current_month_sub != None:
       subscription = stripe.Subscription.retrieve(current_month_sub.subscription_id)
+      print("subscription model on strpe: ", subscription)
       if subscription != None:
          return Response(
             data        = { 'isSubscribed': subscription.status == "active" },
