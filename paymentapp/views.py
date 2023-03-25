@@ -4,7 +4,10 @@ import stripe
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authentication import TokenAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Subscription
@@ -19,6 +22,32 @@ FRONTEND_CHECKOUT_SUCCESS_URL = settings.CHECKOUT_SUCCESS_URL
 FRONTEND_CHECKOUT_FAILED_URL = settings.CHECKOUT_FAILED_URL
 
 # Create your views here.
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def is_user_subscribed(request):
+    userr = request.user
+    current_month = timezone.now().month
+    
+    current_month_sub = Subscription.objects.filter(
+       user = request.user, 
+       isSubscribed = True
+    ).last()
+    
+    if current_month_sub != None:
+      subscription = stripe.Subscription.retrieve(current_month_sub.subscription_id)
+      if subscription != None:
+         return Response(
+            data        = { 'isSubscribed': subscription.status == "active" },
+            status      = status.HTTP_200_OK
+          )
+
+    return Response(
+        data        = { 'isSubscribed': False }, 
+        status      = status.HTTP_200_OK
+    )
+    
 class CreateCheckoutSession(APIView):
   def get(self, request, pk_id):
     user_id = pk_id
@@ -109,19 +138,3 @@ class WebHook(APIView):
 
     return HttpResponse(status=200)
 
-
-
-@api_view(['GET'])
-def is_user_subscribed(request):
-    current_month = timezone.now().month
-    current_month_subs_count = Subscription.objects.filter(
-       user = request.user, 
-       date_created__month = current_month,
-       isSubscribed = True
-    ).count()
-
-    return Response(
-        data        = current_month_subs_count > 0, 
-        status      = status.HTTP_200_OK
-    )
-    
